@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fitness Assistant</title>
+    <script>
+        async function getFitnessAdvice() {
+            const height = document.getElementById('height').value;
+            const weight = document.getElementById('weight').value;
+            const goal = document.getElementById('goal').value;
+            const body_type = document.getElementById('body_type').value;
+
+            const response = await fetch('/get_fitness_advice', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    height: height,
+                    weight: weight,
+                    goal: goal,
+                    body_type: body_type
+                })
+            });
+
+            const data = await response.json();
+
+            document.getElementById('bmi').innerText = `BMI: ${data.bmi.toFixed(2)}`;
+            document.getElementById('diet_tips').innerText = `Diet Tips: ${data.diet_tips}`;
+            document.getElementById('exercise_regimen').innerText = `Exercise Regimen: ${data.exercise_regimen}`;
+        }
+    </script>
+</head>
+<body>
+    <h1>Fitness Assistant</h1>
+    <form onsubmit="event.preventDefault(); getFitnessAdvice();">
+        <label for="height">Height (cm):</label>
+        <input type="number" id="height" required><br>
+        <label for="weight">Weight (kg):</label>
+        <input type="number" id="weight" required><br>
+        <label for="goal">Fitness Goal:</label>
+        <select id="goal" required>
+            <option value="weight loss">Weight Loss</option>
+            <option value="muscle gain">Muscle Gain</option>
+            <option value="maintenance">Maintenance</option>
+        </select><br>
+        <label for="body_type">Body Type:</label>
+        <select id="body_type" required>
+            <option value="ectomorph">Ectomorph</option>
+            <option value="mesomorph">Mesomorph</option>
+            <option value="endomorph">Endomorph</option>
+        </select><br>
+        <button type="submit">Get Advice</button>
+    </form>
+    <div>
+        <h2>Results</h2>
+        <p id="bmi"></p>
+        <p id="diet_tips"></p>
+        <p id="exercise_regimen"></p>
+    </div>
+</body>
+</html>
